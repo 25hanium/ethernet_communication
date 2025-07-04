@@ -1,19 +1,19 @@
-update time: 202507051206
 # how to run example
-    git clone https://github.com/25hanium/ethernet_communication.git
+1. Install ethernet_communication library
+   
+        pip install git+https://github.com/25hanium/ethernet_communication.git
+2. Find ethernet IP
+   
+        hostname -I # linux
+        ipconfig # window
 
-- In host(Rasberry PI), run main_host.py
-- In accelerator(PC), run main_accelerator.py
+3. Run main.py
+- In host(Rasberry PI), run [main_host.py](https://github.com/25hanium/ethernet_communication/blob/main/main_host.py)
+- In accelerator(PC), run [main_accelerator.py](https://github.com/25hanium/ethernet_communication/blob/main/main_accelerator.py)
+
+
   
 # troubleshooting
-## Check ip
-- linux
-  
-        hostname -I
-- window
-  
-        ipconfig
-
 ## Rasberry PI, pip install error
     sudo apt install \
         build-essential \
