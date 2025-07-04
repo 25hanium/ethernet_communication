@@ -12,7 +12,7 @@ setup(
     package_dir={'': '.'},
     include_package_data=True,
     package_data={
-        "my_package": ["weight.pt"],  # 내 패키지에 포함될 파일 지정
+        "ethernet_communication": ["weight.pt"],  # 내 패키지에 포함될 파일 지정
     },
     install_requires=[
         'torch',
