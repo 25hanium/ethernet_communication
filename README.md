@@ -5,6 +5,9 @@
         git clone https://github.com/25hanium/ethernet_communication.git
         # 라즈베리파이에서 pytorch 문제로 설치 불가할 때. host는 torch 필요 없음.
         # 다만 이 경우 __init__.py에서 accelerator 비활성화 필요.
+         sudo apt install python3-venv
+         . .venv-3.7.3/bin/activate
+         pip install numpy Pillow
 3. Find ethernet IP
    
         hostname -I # linux
