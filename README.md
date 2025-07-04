@@ -37,8 +37,17 @@ update time: 202507051206
     python3 -m pip install --upgrade pip
 
 ## Install pytorch
+    sudo apt update
     sudo apt-get update
     sudo apt-get dist-upgrade
+    
+    # git
+    sudo apt install git
+
+    # download project
+    git clone https://github.com/25hanium/ethernet_communication.git
+    
+    # pytorch
     sudo apt install libopenblas-dev libblas-dev m4 cmake cython python3-dev python3-yaml python3-setuptools
     sudo apt-get install libavutil-dev libavcodec-dev libavformat-dev libswscale-dev
     git clone https://github.com/sungjuGit/PyTorch-and-Vision-for-Raspberry-Pi-4B.git
