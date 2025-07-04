@@ -1,1 +1,1 @@
-recursive-include ethernet_communication *.pt
+include my_package/weight.pt
