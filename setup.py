@@ -12,6 +12,7 @@ setup(
     package_dir={'': '.'},
     include_package_data=True,
     install_requires=[
+        'socket'
     ],
     python_requires='>=3.11',
     classifiers=[
