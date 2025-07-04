@@ -13,7 +13,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'socket',
-        'os'
+        'os',
+        'pytorch
     ],
     python_requires='>=3.11',
     classifiers=[
