@@ -14,28 +14,25 @@ update time: 202507051206
   
 - window
   
-      ipconfig
+        ipconfig
 
-
-sudo apt install \
-  build-essential \
-  zlib1g-dev \
-  libncursesw5-dev \
-  libgdbm-dev \
-  libnss3-dev \
-  libssl-dev \
-  libreadline-dev \
-  libffi-dev \
-  libsqlite3-dev \
-  wget \
-  tk-dev \
-  libbz2-devwget https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tgz
-sudo tar xzf Python-3.8.7.tgz
-cd Python.3.8.7
-./configure
-make
-sudo make install
-python3 -m pip install --upgrade pip
-
-error legacy-install-failure
-sudo apt install libgtk-3-dev
+    
+        sudo apt install \
+          build-essential \
+          zlib1g-dev \
+          libncursesw5-dev \
+          libgdbm-dev \
+          libnss3-dev \
+          libssl-dev \
+          libreadline-dev \
+          libffi-dev \
+          libsqlite3-dev \
+          wget \
+          tk-dev \
+          libbz2-devwget https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tgz
+        sudo tar xzf Python-3.8.7.tgz
+        cd Python.3.8.7
+        ./configure
+        make
+        sudo make install
+        python3 -m pip install --upgrade pip
