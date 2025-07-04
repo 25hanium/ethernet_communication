@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from importlib.resources import files
 
 class Block(nn.Module):
     def __init__(self, c_in, c_out, pool=True):
@@ -17,7 +18,7 @@ class Block(nn.Module):
         x = self.relu(x)
         return self.pool(x) if self.pool else x
 
-class model(nn.Module):
+class FaseNet(nn.Module):
     def __init__(self):
         super().__init__()
         self.conv1   = nn.Conv2d(3,64,7,stride=2,padding=3)
@@ -39,3 +40,11 @@ class model(nn.Module):
         x = self.block4(x); x = self.block5(x); x = self.block6(x)
         x = torch.flatten(x,1)
         x = self.linear1(x); return self.linear2(x)
+
+
+def loadDefaultModel():
+    model = FaseNet()
+    weight_path = files('ethernet_communication').joinpath('weight.pt')
+    model.load_state_dict(torch.load(weight_path, weights_only=True))
+    
+    return model
