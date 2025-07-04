@@ -2,12 +2,15 @@
 1. Install ethernet_communication library
    
         pip install git+https://github.com/25hanium/ethernet_communication.git
-2. Find ethernet IP
+        git clone https://github.com/25hanium/ethernet_communication.git
+        # 라즈베리파이에서 pytorch 문제로 설치 불가할 때. host는 torch 필요 없음.
+        # 다만 이 경우 __init__.py에서 accelerator 비활성화 필요.
+3. Find ethernet IP
    
         hostname -I # linux
         ipconfig # window
 
-3. Run main.py
+4. Run main.py
    
 ※ Before Run main, replace 'IP'. 
 - In host(Rasberry PI), run [main_host.py](https://github.com/25hanium/ethernet_communication/blob/main/main_host.py)
