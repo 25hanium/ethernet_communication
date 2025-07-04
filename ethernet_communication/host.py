@@ -43,12 +43,10 @@ class Host(Ethernet):
                 data = client.recv(4096)
                 if not data:
                     break
-                client.sendall(chunk)
+                buffer += data
+            
+            self.logger("Evaluation result received.")
 
-        self.logger("File sent. Waiting for confirmation...")
+            return np.frombuffer(buffer, dtype=np.float32)
 
-        response = client.recv(1024)
-        if response == b'SUCCESS':
-            self.logger("Transmission successful.")
-        else:
-            self.logger("Transmission failed.")
+        return -1
