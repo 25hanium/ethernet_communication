@@ -45,6 +45,6 @@ class FaseNet(nn.Module):
 def loadDefaultModel():
     model = FaseNet()
     weight_path = files('ethernet_communication').joinpath('weight.pt')
-    model.load_state_dict(torch.load(weight_path, weights_only=True))
+    model.load_state_dict(torch.load(weight_path, map_location='cpu', weights_only=True))
     
     return model
