@@ -8,6 +8,7 @@
         ipconfig # window
 
 3. Run main.py
+※ Before Run main, replace 'IP'. 
 - In host(Rasberry PI), run [main_host.py](https://github.com/25hanium/ethernet_communication/blob/main/main_host.py)
 - In accelerator(PC), run [main_accelerator.py](https://github.com/25hanium/ethernet_communication/blob/main/main_accelerator.py)
 
