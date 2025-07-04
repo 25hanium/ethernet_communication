@@ -11,6 +11,9 @@ setup(
     packages=find_packages(),  # tools 폴더를 패키지로 포함
     package_dir={'': '.'},
     include_package_data=True,
+    package_data={
+        "my_package": ["weight.pt"],  # 내 패키지에 포함될 파일 지정
+    },
     install_requires=[
         'torch',
         'torchvision',
