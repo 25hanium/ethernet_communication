@@ -37,13 +37,11 @@ update time: 202507051206
     python3 -m pip install --upgrade pip
 
 ## Install pytorch
-    python3 -m venv myenv
-    source myenv/bin/activates
-
-    sudo pip3 install gdown
-
-    gdown https://drive.google.com/uc?id=1p9Sp5YmCJwIkmQIWkpuIkE4NgeYPOr-U
-    sudo -H pip3 install torch-1.9.0a0+gitd69c22d-cp39-cp39-linux_aarch64.whl
-    gdown https://drive.google.com/uc?id=13fKq1V-zLbLBWPw3zP4EZxyMXyOiJWPi
-    sudo -H pip3 install torchvision-0.10.0a0+300a8a4-cp39-cp39-linux_aarch64.whl
-
+    sudo apt-get update
+    sudo apt-get dist-upgrade
+    sudo apt install libopenblas-dev libblas-dev m4 cmake cython python3-dev python3-yaml python3-setuptools
+    sudo apt-get install libavutil-dev libavcodec-dev libavformat-dev libswscale-dev
+    git clone https://github.com/sungjuGit/PyTorch-and-Vision-for-Raspberry-Pi-4B.git
+    cd PyTorch-and-Vision-for-Raspberry-Pi-4B
+    sudo pip3 install torch-1.4.0a0+f43194e-cp37-cp37m-linux_armv7l.whl
+    sudo pip3 install torchvision-0.5.0a0+9cdc814-cp37-cp37m-linux_armv7l.whl
