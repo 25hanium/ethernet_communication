@@ -7,7 +7,7 @@ from .model import model
 from .ethernet import Ethernet
 
 class Accelerator(Ethernet):
-    def __init__(self, HOST, log=False, tag='', model=model(), input_shape=(3, 224, 224)):  
+    def __init__(self, HOST, log=False, tag='', model=model(), input_shape=(3, 224, 224), weight='.weight.pt'):  
         super().__init__(HOST, log, tag)
         self.model = model
         self.input_shape = input_shape
@@ -15,6 +15,8 @@ class Accelerator(Ethernet):
         self.path = 'image.png'
         # setup
         self.model.to(self.device)
+        if (weight is not None):
+            self.model.load_state_dict(torch.load(weight, weights_only=True))
         self.model.eval()
         self.transform = transforms.Compose([
             transforms.ToTensor(),
