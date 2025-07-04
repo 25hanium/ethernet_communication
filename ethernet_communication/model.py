@@ -17,8 +17,8 @@ class Block(nn.Module):
         x = self.relu(x)
         return self.pool(x) if self.pool else x
 
-class FaceNetEmbedding(nn.Module):
-    def __init__(self, h, w):
+class model(nn.Module):
+    def __init__(self):
         super().__init__()
         self.conv1   = nn.Conv2d(3,64,7,stride=2,padding=3)
         self.pool    = nn.MaxPool2d(3,2,padding=1)
