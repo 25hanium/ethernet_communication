@@ -1,1 +1,1 @@
-include my_package/weight.pt
+include ethernet_communication/weight.pt
