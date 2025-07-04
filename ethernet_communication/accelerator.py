@@ -1,5 +1,6 @@
 import socket
 import torch
+import io
 from PIL import Image
 from torchvision import transforms
 from .model import model
@@ -16,7 +17,6 @@ class Accelerator(Ethernet):
     self.model.to(self.device)
     self.model.eval()
     self.transform = transforms.Compose([
-        transforms.Resize(input_shape[1:]),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
@@ -30,16 +30,14 @@ class Accelerator(Ethernet):
         conn, addr = server.accept()
         self.logger(f"Connected by {addr}")
 
-        with open(self.path, 'wb') as f:
-            while True:
-                data = conn.recv(4096)
-                if not data:
-                    break
-                f.write(data)
-
-        self.logger(f"File saved as {self.path}")
-
-        image = Image.open(self.path).convert('RGB')
+        image_bytes = b''
+        while True:
+            data = conn.recv(4096)
+            if not data:
+                break
+            image_bytes += data
+        
+        image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
         image = self.transform(image).unsqueeze(0).to(self.device)
         
         with torch.no_grad():
