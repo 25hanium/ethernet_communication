@@ -17,8 +17,19 @@ update time: 202507051206
       ipconfig
 
 
-sudo apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev
-wget https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tgz
+sudo apt install \
+  build-essential \
+  zlib1g-dev \
+  libncursesw5-dev \
+  libgdbm-dev \
+  libnss3-dev \
+  libssl-dev \
+  libreadline-dev \
+  libffi-dev \
+  libsqlite3-dev \
+  wget \
+  tk-dev \
+  libbz2-devwget https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tgz
 sudo tar xzf Python-3.8.7.tgz
 cd Python.3.8.7
 ./configure
