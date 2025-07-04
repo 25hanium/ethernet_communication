@@ -47,4 +47,3 @@ class Accelerator(Ethernet):
         self.logger(f"Send evaluation result.")
       
         conn.close()
-        return 0
