@@ -12,9 +12,10 @@ setup(
     package_dir={'': '.'},
     include_package_data=True,
     install_requires=[
-        'socket',
-        'os',
-        'pytorch
+        'torch',
+        'torchvision',
+        'Pillow',
+        'numpy'
     ],
     python_requires='>=3.11',
     classifiers=[
