@@ -35,3 +35,10 @@ update time: 202507051206
     make
     sudo make install
     python3 -m pip install --upgrade pip
+
+## Install pytorch
+    sudo apt-get update sudo apt-get dist-upgrade -y
+    sudo apt install libopenblas-dev libblas-dev m4 cmake cython python3-dev python3
+    sudo pip3 install virtualenv
+    virtualenv env source env/bin/activate
+    git clone https://github.com/sungjuGit/PyTorch-and-Vision-for-Raspberry-Pi-4B.git cd PyTorch-and-Vision-for-Raspberry-Pi-4B sudo pip install torch-1.4.0a0+f43194e-cp37-cp37m-linux_armv7l.whl sudo pip install torchvision-0.5.0a0+9cdc814-cp37-cp37m-linux_armv7l.whl
