@@ -1,14 +1,16 @@
 import socket
 import torch
+import numpy as np
 import io
 from PIL import Image
+from time import time
 from torchvision import transforms
 from .model import loadDefaultModel
 from .ethernet import Ethernet
 
 class Accelerator(Ethernet):
-    def __init__(self, HOST, log=False, tag='', model=loadDefaultModel(), input_shape=(3, 224, 224)):  
-        super().__init__(HOST, log, tag)
+    def __init__(self, HOST, log=False, tag='', logLevel=0, model=loadDefaultModel(), input_shape=(3, 224, 224)):  
+        super().__init__(HOST, log, tag, logLevel)
         # model
         self.model = model
         self.input_shape = input_shape
@@ -55,21 +57,27 @@ class Accelerator(Ethernet):
                         raise Exception(f"Incomplete image data received. Expected {image_size}, got {bytes_received}")
                     
                     image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+
+                    s = time()
                     image = self.transform(image).unsqueeze(0).to(self.device)
-                    
                     with torch.no_grad():
                         res = self.model(image)
+                    e = time()
 
-                    result_bytes = res.cpu().numpy().tobytes()
+                    res = res.cpu().numpy()
+                    result_bytes = res.tobytes()
                     result_size = len(result_bytes)
                     conn.sendall(result_size.to_bytes(4, 'big')) # Send result size first
                     conn.sendall(result_bytes) # Then send the actual result
                     self.logger(f"Send evaluation result to {addr}.")
+
+                    self.logger(f'sum(res): {np.sum(res):.3f} ({e-s:.3f})', 1)
                 except Exception as e:
                     self.logger(f"Error processing request from {addr}: {e}")
-                    break # Break from inner loop on error, close connection
-                # No finally block with conn.close() here. Connection stays open for next request.
-            conn.close() # Close connection only when inner loop breaks (client disconnected or error)
+                    break  
+
+            conn.close()
+            return -1
 
     def __del__(self):
         if hasattr(self, 'server_socket'):

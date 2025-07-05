@@ -5,8 +5,8 @@ from PIL import Image
 from .ethernet import Ethernet
 
 class Host(Ethernet):
-    def __init__(self, HOST, log=False, tag=''):  
-        super().__init__(HOST, log, tag)
+    def __init__(self, HOST, log=False, tag='', logLevel=0):  
+        super().__init__(HOST, log, tag, logLevel)
         self.supportFormat = [(np.ndarray, self.numpy2byte)]
         # Initialize client socket for persistent connection
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

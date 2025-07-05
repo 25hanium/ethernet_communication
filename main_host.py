@@ -9,10 +9,14 @@ N = 100
 delay = []
 s = time()
 for i in range(N):
+    # Communication
     random_image = np.ones((224, 224, 3), dtype=np.uint8)
     res = host(random_image)
+    
+    # log
     delay.append(time()-s)
     s = time()
-    print(f"Loop {i} : res {np.sum(res)} ({delay[-1]}s)")
+    print(f"Loop {i} : sum(res) {np.sum(res):.3f} ({delay[-1]:.3f}s)")
 
-print(f"fps: {1/np.average(delay)}Hz (sampling: {N})")
+# Result
+print(f"\n※ Communication Result ※\n    fps: {1/np.average(delay)}Hz (sampling: {N})")
