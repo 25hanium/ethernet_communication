@@ -37,6 +37,7 @@ CMD에서 아래 명령어로 새로 추가된 IP 192.168.xxx.yyy 확인.
          git clone https://github.com/25hanium/ethernet_communication.git
          # lib
          sudo apt install python3-venv
+         python3 -m venv .venv
          . .venv-3.7.3/bin/activate
          pip install numpy Pillow
 
