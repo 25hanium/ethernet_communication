@@ -3,9 +3,9 @@
 구별률 최대 75%의 CatFaceNet CNN 모델이 디폴트 모델로 삽입되어 있습니다. 
 한장의 이미지를 전송하고 CNN 결과를 반환받는 간단한 예제를 위해 [how_to_run_example.md](https://github.com/25hanium/ethernet_communication/blob/main/how_to_run_example.md)를 참고하세요.
 
-- 연산 결과. (라즈베리파이)
-
- <img src="https://github.com/user-attachments/assets/2d9a8534-9867-4a62-85e0-38ea86f83fb8"  width="500"/>
+- 연산 결과
+ <img src="https://github.com/user-attachments/assets/e553aa82-d91f-46ab-be18-77f183836b95"  width="500"/>
+ <img src="https://github.com/user-attachments/assets/da150566-5c05-45bc-9bf6-f2d0e2dfde57"  width="500"/>
 
 
   
