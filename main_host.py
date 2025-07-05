@@ -8,10 +8,11 @@ host = ec.Host(IP, True)
 N = 100
 delay = []
 s = time()
-for _ in range(N):
-    random_image = np.random.randint(0, 256, (224, 224, 3), dtype=np.uint8)
-    _ = host(random_image)
+for i in range(N):
+    random_image = np.ones((224, 224, 3), dtype=np.uint8)
+    res = host(random_image)
     delay.append(time()-s)
     s = time()
-    
+    print(f"Loop {i} : res {np.sum(res)} ({delay[-1]}s)")
+
 print(f"fps: {1/np.average(delay)}Hz (sampling: {N})")

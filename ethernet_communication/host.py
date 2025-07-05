@@ -38,12 +38,23 @@ class Host(Ethernet):
 
         self.logger("Image sent. Waiting for evaluation result...")
 
+        # Receive result size first
+        result_size_bytes = self.client_socket.recv(4)
+        if not result_size_bytes:
+            raise Exception("Did not receive result size.")
+        result_size = int.from_bytes(result_size_bytes, 'big')
+
         buffer = b''
-        while True:
-            data = self.client_socket.recv(4096)
+        bytes_received = 0
+        while bytes_received < result_size:
+            data = self.client_socket.recv(min(4096, result_size - bytes_received))
             if not data:
                 break
             buffer += data
+            bytes_received += len(data)
+        
+        if bytes_received != result_size:
+            raise Exception(f"Incomplete result data received. Expected {result_size}, got {bytes_received}")
         
         self.logger("Evaluation result received.")
 

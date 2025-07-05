@@ -27,41 +27,49 @@ class Accelerator(Ethernet):
         self.logger(f"Listening on port {self.PORT}...")
     
     def __call__(self):
-        while True:
+        while True: # Loop to accept new client connections
             conn, addr = self.server_socket.accept()
             self.logger(f"Connected by {addr}")
-
-            try:
-                # Receive image size first
-                image_size_bytes = conn.recv(4)
-                if not image_size_bytes:
-                    raise Exception("Did not receive image size.")
-                image_size = int.from_bytes(image_size_bytes, 'big')
-
-                image_bytes = b''
-                bytes_received = 0
-                while bytes_received < image_size:
-                    data = conn.recv(min(4096, image_size - bytes_received))
-                    if not data:
-                        break
-                    image_bytes += data
-                    bytes_received += len(data)
-                
-                if bytes_received != image_size:
-                    raise Exception(f"Incomplete image data received. Expected {image_size}, got {bytes_received}")
-                
-                image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
-                image = self.transform(image).unsqueeze(0).to(self.device)
-                
-                with torch.no_grad():
-                    res = self.model(image)
             
-                conn.sendall(res.cpu().numpy().tobytes())
-                self.logger(f"Send evaluation result.")
-            except Exception as e:
-                self.logger(f"Error processing request: {e}")
-            finally:
-                conn.close()
+            # Inner loop to handle multiple requests from the same client
+            while True: 
+                try:
+                    # Receive image size first
+                    image_size_bytes = conn.recv(4)
+                    if not image_size_bytes: # Client disconnected
+                        self.logger(f"Client {addr} disconnected.")
+                        break # Break from inner loop, go back to accept new client
+                    image_size = int.from_bytes(image_size_bytes, 'big')
+
+                    image_bytes = b''
+                    bytes_received = 0
+                    while bytes_received < image_size:
+                        data = conn.recv(min(4096, image_size - bytes_received))
+                        if not data: # Client disconnected during data transfer
+                            self.logger(f"Client {addr} disconnected during data transfer.")
+                            break # Break from inner loop
+                        image_bytes += data
+                        bytes_received += len(data)
+                    
+                    if bytes_received != image_size:
+                        raise Exception(f"Incomplete image data received. Expected {image_size}, got {bytes_received}")
+                    
+                    image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+                    image = self.transform(image).unsqueeze(0).to(self.device)
+                    
+                    with torch.no_grad():
+                        res = self.model(image)
+
+                    result_bytes = res.cpu().numpy().tobytes()
+                    result_size = len(result_bytes)
+                    conn.sendall(result_size.to_bytes(4, 'big')) # Send result size first
+                    conn.sendall(result_bytes) # Then send the actual result
+                    self.logger(f"Send evaluation result to {addr}.")
+                except Exception as e:
+                    self.logger(f"Error processing request from {addr}: {e}")
+                    break # Break from inner loop on error, close connection
+                # No finally block with conn.close() here. Connection stays open for next request.
+            conn.close() # Close connection only when inner loop breaks (client disconnected or error)
 
     def __del__(self):
         if hasattr(self, 'server_socket'):
