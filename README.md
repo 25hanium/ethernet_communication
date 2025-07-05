@@ -1,7 +1,7 @@
 # Ethernet Commnunication
 이 프로젝트는 CNN 가속을 위해 가속기(PC)와 호스트(라즈베리 파이)를 직렬 LAN로 연결해 구동하기 위한 파이썬 라이브러리입니다.
 구별률 최대 75%의 CatFaceNet CNN 모델이 디폴트 모델로 삽입되어 있습니다. 
-한장의 이미지를 전송하고 CNN 결과를 반환받는 간단한 예제를 위해 [how_to_run_example.md](https://github.com/25hanium/ethernet_communication/blob/main/how_to_run_example.md)를 참고하세요.
+예제 실행은 [how_to_run_example.md](https://github.com/25hanium/ethernet_communication/blob/main/how_to_run_example.md)를 참고하세요.
 
 - 연산 결과
  <img src="https://github.com/user-attachments/assets/e553aa82-d91f-46ab-be18-77f183836b95"  width="500"/>
