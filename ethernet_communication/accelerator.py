@@ -32,12 +32,23 @@ class Accelerator(Ethernet):
             self.logger(f"Connected by {addr}")
 
             try:
+                # Receive image size first
+                image_size_bytes = conn.recv(4)
+                if not image_size_bytes:
+                    raise Exception("Did not receive image size.")
+                image_size = int.from_bytes(image_size_bytes, 'big')
+
                 image_bytes = b''
-                while True:
-                    data = conn.recv(4096)
+                bytes_received = 0
+                while bytes_received < image_size:
+                    data = conn.recv(min(4096, image_size - bytes_received))
                     if not data:
                         break
                     image_bytes += data
+                    bytes_received += len(data)
+                
+                if bytes_received != image_size:
+                    raise Exception(f"Incomplete image data received. Expected {image_size}, got {bytes_received}")
                 
                 image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
                 image = self.transform(image).unsqueeze(0).to(self.device)

@@ -31,6 +31,9 @@ class Host(Ethernet):
             print(f"Wrong input type. received {type(img)}.")
             return -1
 
+        # Send image size first
+        image_size = len(image_bytes)
+        self.client_socket.sendall(image_size.to_bytes(4, 'big'))
         self.client_socket.sendall(image_bytes)
 
         self.logger("Image sent. Waiting for evaluation result...")
