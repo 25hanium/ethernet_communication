@@ -8,6 +8,10 @@ class Host(Ethernet):
     def __init__(self, HOST, log=False, tag=''):  
         super().__init__(HOST, log, tag)
         self.supportFormat = [(np.ndarray, self.numpy2byte)]
+        # Initialize client socket for persistent connection
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect((self.HOST, self.PORT))
+        self.logger(f"Connected to {self.HOST}:{self.PORT}")
 
     def numpy2byte(self, img):
         img = Image.fromarray(img.astype('uint8'))
@@ -16,8 +20,7 @@ class Host(Ethernet):
             image_bytes = output.getvalue()
 
         return image_bytes
-        
-
+    
     def __call__(self, img):
         for ty, encoder in self.supportFormat:
             if (type(img) is not ty):
@@ -28,25 +31,22 @@ class Host(Ethernet):
             print(f"Wrong input type. received {type(img)}.")
             return -1
 
+        self.client_socket.sendall(image_bytes)
 
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
-            client.connect((self.HOST, self.PORT))
-            self.logger(f"Connected to {self.HOST}:{self.PORT}")
+        self.logger("Image sent. Waiting for evaluation result...")
 
-            client.sendall(image_bytes)
-            client.shutdown(socket.SHUT_WR) # Signal end of sending
+        buffer = b''
+        while True:
+            data = self.client_socket.recv(4096)
+            if not data:
+                break
+            buffer += data
+        
+        self.logger("Evaluation result received.")
 
-            self.logger("Image sent. Waiting for evaluation result...")
+        return np.frombuffer(buffer, dtype=np.float32)
 
-            buffer = b''
-            while True:
-                data = client.recv(4096)
-                if not data:
-                    break
-                buffer += data
-            
-            self.logger("Evaluation result received.")
-
-            return np.frombuffer(buffer, dtype=np.float32)
-
-        return -1
+    def __del__(self):
+        if hasattr(self, 'client_socket'):
+            self.client_socket.close()
+            self.logger("Client socket closed.")

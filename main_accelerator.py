@@ -1,7 +1,7 @@
 import ethernet_communication as ec
-
-IP = '169.254.51.93:5000'
-
+import numpy as np
+ 
+IP = '192.168.137.1:5000'
 acc = ec.Accelerator(IP, True)
-res = acc()
-print(res)
+
+_ = acc()
