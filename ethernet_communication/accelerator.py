@@ -44,13 +44,14 @@ class Accelerator(Ethernet):
                 try:    
                     image_bytes = b''
                     while len(image_bytes) < self.input_byte_size:
+                        self.logger(f"image_bytes len: {len(image_bytes)}")
                         packet = conn.recv(self.input_byte_size - len(image_bytes))
                         if not packet:
                             self.logger(f"Client {addr} disconnected.")
                         image_bytes += packet
                     
                     image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
-
+                    self.logger("Run model")
                     s = time()
                     image = self.transform(image).unsqueeze(0).to(self.device)
                     with torch.no_grad():
