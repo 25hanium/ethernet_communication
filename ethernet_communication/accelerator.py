@@ -48,9 +48,20 @@ class Accelerator(Ethernet):
                         packet = conn.recv(self.input_byte_size - len(image_bytes))
                         if not packet:
                             self.logger(f"Client {addr} disconnected.")
+                            break # Exit inner loop if client disconnects
                         image_bytes += packet
                     
-                    image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+                    if not image_bytes: # If no bytes received, client disconnected
+                        break
+
+                    # Convert 1D byte array to numpy array and reshape to image dimensions
+                    image_np = np.frombuffer(image_bytes, dtype=self.i_type)
+                    # Assuming input_size is H*W*C for a flattened image
+                    # Reshape to (H, W, C) for PIL.Image.fromarray
+                    # Assuming 3 channels (RGB) and square image for simplicity, adjust if needed
+                    side_length = int(np.sqrt(self.input_size / 3)) 
+                    image = Image.fromarray(image_np.reshape((side_length, side_length, 3)))
+                    
                     self.logger("Run model")
                     s = time()
                     image = self.transform(image).unsqueeze(0).to(self.device)

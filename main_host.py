@@ -3,8 +3,8 @@ import numpy as np
 from time import time
 
 IP = '192.168.137.1:7'
-i_type = int
-i_byte = 4
+i_type = np.uint8
+i_byte = 1
 input_size = 3*224*224
 o_type = float
 o_byte = 4

@@ -15,30 +15,17 @@ class Host(Ethernet):
         self.o_type = o_type
         self.output_size = output_size
         self.output_byte_size = o_byte*input_size
-        self.supportFormat = [(np.ndarray, self.numpy2byte)]
         # Initialize client socket for persistent connection
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((self.HOST, self.PORT))
         self.logger(f"Connected to {self.HOST}:{self.PORT}")
-
-    def numpy2byte(self, img):
-        img = Image.fromarray(img.astype(self.i_type))
-        with io.BytesIO() as output:
-            img.save(output, format="PNG")
-            image_bytes = output.getvalue()
-
-        return image_bytes
     
     def __call__(self, img):
-        for ty, encoder in self.supportFormat:
-            if (type(img) is not ty):
-                continue
-            image_bytes = encoder(img)
-            break
-        else:
-            print(f"Wrong input type. received {type(img)}.")
+        if not isinstance(img, np.ndarray):
+            print(f"Wrong input type. received {type(img)}. Expected numpy.ndarray.")
             return -1
-
+        
+        image_bytes = img.astype(self.i_type).tobytes()
         self.client_socket.sendall(image_bytes)
 
         self.logger("Image sent. Waiting for evaluation result...")
