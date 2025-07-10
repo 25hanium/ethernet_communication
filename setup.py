@@ -12,14 +12,15 @@ setup(
     package_dir={'': '.'},
     include_package_data=True,
     package_data={
-        "ethernet_communication": ["weight.pt"],  # 내 패키지에 포함될 파일 지정
+        "ethernet_communication": ["weight.pt"],
     },
     install_requires=[
-        'torch',
-        'torchvision',
         'Pillow',
         'numpy'
     ],
+    extras_require={
+        'pytorch': ['torch', 'torchvision']
+    },
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
