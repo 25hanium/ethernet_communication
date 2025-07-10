@@ -1,7 +1,7 @@
 ## PC
 ### 1. Install ethernet_communication library
    
-        pip install git+https://github.com/25hanium/ethernet_communication.git
+         pip install "git+https://github.com/25hanium/ethernet_communication.git#egg=ethernet_communication[pytorch]"
 
 
 ### 2. 이더넷 IP 확인.
@@ -34,19 +34,11 @@ CMD에서 아래 명령어로 새로 추가된 IP 192.168.xxx.yyy 확인.
 
          # git
          sudo apt install git
-         git clone https://github.com/25hanium/ethernet_communication.git
          # lib
          sudo apt install python3-venv
          python3 -m venv .venv
-         . .venv-3.7.3/bin/activate
-         pip install numpy Pillow
+         pip install git+https://github.com/25hanium/ethernet_communication.git
 
-
-### 2. pytorch 설치에 에로사항 있음으로 'ethernet_communication/ethernet_communication/__init__.py' 수정
- 
-         from .host import Host
-         
-         __all__ = ['Host']
 
 ### 3. main_host.py의 'IP'를 PC와 동일하게 수정. 
 ### 4. Run main_host.py
