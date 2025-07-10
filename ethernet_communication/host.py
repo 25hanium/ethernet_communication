@@ -22,7 +22,7 @@ class Host(Ethernet):
         self.logger(f"Connected to {self.HOST}:{self.PORT}")
 
     def numpy2byte(self, img):
-        img = Image.fromarray(img.astype(self.i_byte))
+        img = Image.fromarray(img.astype(self.i_type))
         with io.BytesIO() as output:
             img.save(output, format="PNG")
             image_bytes = output.getvalue()
