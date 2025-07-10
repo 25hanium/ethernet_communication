@@ -9,11 +9,18 @@ from .model import loadDefaultModel
 from .ethernet import Ethernet
 
 class Accelerator(Ethernet):
-    def __init__(self, HOST, log=False, tag='', logLevel=0, model=loadDefaultModel(), input_shape=(3, 224, 224)):  
+    def __init__(self, HOST, log=False, tag='', logLevel=0, model=loadDefaultModel(), i_type=int, i_byte=4, input_size=3*224*224, o_type=float, o_byte=4,  output_size=128):  
         super().__init__(HOST, log, tag, logLevel)
-        # model
         self.model = model
-        self.input_shape = input_shape
+        self.i_type = i_type
+        self.i_byte = i_byte
+        self.input_size = input_size
+        self.input_byte_size = i_byte*input_size
+        self.o_byte = o_byte
+        self.o_type = o_type
+        self.output_size = output_size
+        self.output_byte_size = o_byte*input_size
+        # model
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         # setup
         self.model.to(self.device)
@@ -29,32 +36,18 @@ class Accelerator(Ethernet):
         self.logger(f"Listening on port {self.PORT}...")
     
     def __call__(self):
-        while True: # Loop to accept new client connections
+        while True: 
             conn, addr = self.server_socket.accept()
             self.logger(f"Connected by {addr}")
             
-            # Inner loop to handle multiple requests from the same client
             while True: 
-                try:
-                    # Receive image size first
-                    image_size_bytes = conn.recv(4)
-                    if not image_size_bytes: # Client disconnected
-                        self.logger(f"Client {addr} disconnected.")
-                        break # Break from inner loop, go back to accept new client
-                    image_size = int.from_bytes(image_size_bytes, 'big')
-
+                try:    
                     image_bytes = b''
-                    bytes_received = 0
-                    while bytes_received < image_size:
-                        data = conn.recv(min(4096, image_size - bytes_received))
-                        if not data: # Client disconnected during data transfer
-                            self.logger(f"Client {addr} disconnected during data transfer.")
-                            break # Break from inner loop
-                        image_bytes += data
-                        bytes_received += len(data)
-                    
-                    if bytes_received != image_size:
-                        raise Exception(f"Incomplete image data received. Expected {image_size}, got {bytes_received}")
+                    while len(image_bytes) < self.input_byte_size:
+                        packet = conn.recv(self.input_byte_size - len(image_bytes))
+                        if not packet:
+                            self.logger(f"Client {addr} disconnected.")
+                        image_bytes += packet
                     
                     image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
 
@@ -65,9 +58,7 @@ class Accelerator(Ethernet):
                     e = time()
 
                     res = res.cpu().numpy()
-                    result_bytes = res.tobytes()
-                    result_size = len(result_bytes)
-                    conn.sendall(result_size.to_bytes(4, 'big')) # Send result size first
+                    result_bytes = res.astype(self.o_type).tobytes()
                     conn.sendall(result_bytes) # Then send the actual result
                     self.logger(f"Send evaluation result to {addr}.")
 

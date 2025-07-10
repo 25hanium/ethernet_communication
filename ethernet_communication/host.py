@@ -5,8 +5,16 @@ from PIL import Image
 from .ethernet import Ethernet
 
 class Host(Ethernet):
-    def __init__(self, HOST, log=False, tag='', logLevel=0):  
+    def __init__(self, HOST, log=False, tag='', logLevel=0, i_type=int, i_byte=4, input_size=3*224*224, o_type=float, o_byte=4,  output_size=128):  
         super().__init__(HOST, log, tag, logLevel)
+        self.i_type = i_type
+        self.i_byte = i_byte
+        self.input_size = input_size
+        self.input_byte_size = i_byte*input_size
+        self.o_byte = o_byte
+        self.o_type = o_type
+        self.output_size = output_size
+        self.output_byte_size = o_byte*input_size
         self.supportFormat = [(np.ndarray, self.numpy2byte)]
         # Initialize client socket for persistent connection
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -14,7 +22,7 @@ class Host(Ethernet):
         self.logger(f"Connected to {self.HOST}:{self.PORT}")
 
     def numpy2byte(self, img):
-        img = Image.fromarray(img.astype('uint8'))
+        img = Image.fromarray(img.astype(self.i_byte))
         with io.BytesIO() as output:
             img.save(output, format="PNG")
             image_bytes = output.getvalue()
@@ -31,34 +39,15 @@ class Host(Ethernet):
             print(f"Wrong input type. received {type(img)}.")
             return -1
 
-        # Send image size first
-        image_size = len(image_bytes)
-        self.client_socket.sendall(image_size.to_bytes(4, 'big'))
         self.client_socket.sendall(image_bytes)
 
         self.logger("Image sent. Waiting for evaluation result...")
 
-        # Receive result size first
-        result_size_bytes = self.client_socket.recv(4)
-        if not result_size_bytes:
-            raise Exception("Did not receive result size.")
-        result_size = int.from_bytes(result_size_bytes, 'big')
-
-        buffer = b''
-        bytes_received = 0
-        while bytes_received < result_size:
-            data = self.client_socket.recv(min(4096, result_size - bytes_received))
-            if not data:
-                break
-            buffer += data
-            bytes_received += len(data)
-        
-        if bytes_received != result_size:
-            raise Exception(f"Incomplete result data received. Expected {result_size}, got {bytes_received}")
+        buffer = self.client_socket.recv(self.output_byte_size)
         
         self.logger("Evaluation result received.")
 
-        return np.frombuffer(buffer, dtype=np.float32)
+        return np.frombuffer(buffer, dtype=self.o_type)
 
     def __del__(self):
         if hasattr(self, 'client_socket'):

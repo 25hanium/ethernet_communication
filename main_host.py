@@ -2,8 +2,21 @@ import ethernet_communication as ec
 import numpy as np
 from time import time
 
-IP = '192.168.137.1:5000'
-host = ec.Host(IP, True)
+IP = '192.168.137.1:7'
+i_type = int
+i_byte = 4
+input_size = 3*224*224
+o_type = float
+o_byte = 4
+output_size = 128
+
+host = ec.Host(IP, True,
+    i_type=i_type,
+    i_byte=i_byte,
+    input_size=input_size,
+    o_type=o_type,
+    o_byte=o_byte,
+    output_size=output_size)
 
 N = 100
 delay = []
