@@ -24,9 +24,7 @@ class Host(Ethernet):
         if not isinstance(img, np.ndarray):
             print(f"Wrong input type. received {type(img)}. Expected numpy.ndarray.")
             return -1
-        print("before img.dtype:", img.dtype)
         image_bytes = img.astype(self.i_type).tobytes()
-        print("after img.dtype:", img.dtype)
         self.client_socket.sendall(image_bytes)
 
         self.logger("Image sent. Waiting for evaluation result...")
