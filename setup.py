@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ethernet_communication', 
-    version='0.9.2',
+    version='0.9.3',
     author='None',
     author_email='None',
     description='CNN communication library based on ethernet.',
