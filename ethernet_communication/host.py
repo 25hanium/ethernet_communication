@@ -14,7 +14,7 @@ class Host(Ethernet):
         self.o_byte = o_byte
         self.o_type = o_type
         self.output_size = output_size
-        self.output_byte_size = o_byte*input_size
+        self.output_byte_size = o_byte*output_size
         # Initialize client socket for persistent connection
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((self.HOST, self.PORT))
