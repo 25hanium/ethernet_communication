@@ -30,11 +30,19 @@ class Host(Ethernet):
 
         self.logger("Image sent. Waiting for evaluation result...")
 
-        buffer = self.client_socket.recv(self.output_byte_size)
-        
+        buf = bytearray(self.output_byte_size)
+        view = memoryview(buf)
+        bytes_received = 0
+        while bytes_received < self.output_byte_size:
+            n = self.client_socket.recv_into(view[bytes_received:], 
+                                             self.output_byte_size - bytes_received)
+            if n == 0:
+                raise ConnectionError("Connection closed by peer")
+            bytes_received += n
+
         self.logger("Evaluation result received.")
 
-        return np.frombuffer(buffer, dtype=self.o_type)
+        return np.frombuffer(buf, dtype=self.o_type)
 
     def __del__(self):
         if hasattr(self, 'client_socket'):
