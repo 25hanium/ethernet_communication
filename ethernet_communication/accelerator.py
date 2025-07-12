@@ -1,9 +1,9 @@
 import socket
-import torch
 import numpy as np
 import io
 from PIL import Image
 from time import time
+import torch
 from torchvision import transforms
 from .model import loadDefaultModel
 from .ethernet import Ethernet
@@ -19,7 +19,7 @@ class Accelerator(Ethernet):
         self.o_byte = o_byte
         self.o_type = o_type
         self.output_size = output_size
-        self.output_byte_size = o_byte*input_size
+        self.output_byte_size = o_byte*output_size
         # model
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         # setup
